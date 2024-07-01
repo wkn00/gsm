@@ -1,26 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './components/Home';
+import CreateGame from './components/CreateGame';
+import JoinGame from './components/JoinGame';
+import WaitingRoom from './components/WaitingRoom';
+import StartGame from './components/StartGame';
+import Game from './components/Game';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/create" element={<CreateGame />} />
+                <Route path="/join" element={<JoinGame />} />
+                <Route path="/waiting/:gameId/:playerName" element={<WaitingRoom />} />
+                <Route path="/start/:gameId/:playerName" element={<StartGame />} />
+                <Route path="/game/:gameId/:playerName" element={<Game />} />
+            </Routes>
+        </Router>
+    );
+};
 
 export default App;
