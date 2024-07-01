@@ -12,12 +12,14 @@ const Game: React.FC = () => {
     const [winner, setWinner] = useState<string | null>(null);
     const [error, setError] = useState('');
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const fetchGameState = useCallback(async () => {
-        const response = await axios.get(`http://localhost:5000/game/${gameId}`);
+        const response = await axios.get(`${apiUrl}/game/${gameId}`);
         setTurns(response.data.turns);
         setCurrentTurn(response.data.currentTurn);
         setWinner(response.data.winner);
-    }, [gameId]);
+    }, [gameId, apiUrl]);
 
     useEffect(() => {
         fetchGameState(); // Initial fetch
@@ -52,7 +54,7 @@ const Game: React.FC = () => {
             setError('Please enter exactly 3 distinct digits.');
             return;
         }
-        await axios.post('http://localhost:5000/guess', { gameId, playerName, guess });
+        await axios.post(`${apiUrl}/guess`, { gameId, playerName, guess });
         setGuess('');
         fetchGameState();
     };

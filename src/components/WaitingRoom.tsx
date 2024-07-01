@@ -8,9 +8,11 @@ const WaitingRoom: React.FC = () => {
     const [players, setPlayers] = useState<{ [key: string]: string }>({});
     const [copied, setCopied] = useState(false);
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     useEffect(() => {
         const interval = setInterval(async () => {
-            const response = await axios.get(`http://localhost:5000/game/${gameId}`);
+            const response = await axios.get(`${apiUrl}/game/${gameId}`);
             setPlayers(response.data.players);
             if (Object.keys(response.data.players).length === 2) {
                 clearInterval(interval);
@@ -19,7 +21,7 @@ const WaitingRoom: React.FC = () => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [gameId, navigate]);
+    }, [gameId, navigate, apiUrl, playerName]);
 
     const copyGameId = () => {
         navigator.clipboard.writeText(gameId!); // Use non-null assertion operator

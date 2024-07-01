@@ -7,8 +7,10 @@ const JoinGame: React.FC = () => {
     const [gameId, setGameId] = useState('');
     const [playerName, setPlayerName] = useState('');
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const joinGame = async () => {
-        await axios.post('http://localhost:5000/join', { gameId, playerName });
+        await axios.post(`${apiUrl}/join`, { gameId, playerName });
         navigate(`/waiting/${gameId}/${playerName}`);
     };
 

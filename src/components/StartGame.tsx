@@ -8,6 +8,8 @@ const StartGame: React.FC = () => {
     const [number, setNumber] = useState('');
     const [error, setError] = useState('');
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const validateAndSetNumber = (input: string) => {
         // Remove any character that is not 1-9
         const filteredInput = input.replace(/[^1-9]/g, '');
@@ -33,7 +35,7 @@ const StartGame: React.FC = () => {
             setError('Please enter exactly 3 distinct digits.');
             return;
         }
-        await axios.post('http://localhost:5000/start-game', { gameId, playerName, number });
+        await axios.post(`${apiUrl}/start-game`, { gameId, playerName, number });
         navigate(`/game/${gameId}/${playerName}`);
     };
 

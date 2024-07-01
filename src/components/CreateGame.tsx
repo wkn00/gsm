@@ -6,8 +6,10 @@ const CreateGame: React.FC = () => {
     const navigate = useNavigate();
     const [playerName, setPlayerName] = useState('');
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const createGame = async () => {
-        const response = await axios.post('http://localhost:5000/start', { playerName });
+        const response = await axios.post(`${apiUrl}/start`, { playerName });
         navigate(`/waiting/${response.data.gameId}/${response.data.playerName}`);
     };
 
