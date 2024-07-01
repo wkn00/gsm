@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import { useSpring, animated } from '@react-spring/web';
 
 const Game: React.FC = () => {
     const { gameId, playerName } = useParams<{ gameId: string, playerName: string }>();
+    const navigate = useNavigate();
     const [guess, setGuess] = useState('');
     const [turns, setTurns] = useState<any[]>([]);
     const [currentTurn, setCurrentTurn] = useState('');
     const [winner, setWinner] = useState<string | null>(null);
     const [error, setError] = useState('');
+    const [backgroundColor, setBackgroundColor] = useState('bg-gradient-to-r from-gray-700 to-indigo-700');
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -109,24 +111,41 @@ const Game: React.FC = () => {
     const opponentName = opponentTurn ? opponentTurn.playerName : 'Opponent';
 
     const confettiStyles = useSpring({
-        opacity: winner ? 1 : 0,
-        transform: winner ? 'translateY(0)' : 'translateY(-100%)',
-        config: { duration: 1000 }
+        from: { transform: 'translateY(-100%)' }, // Start above the screen
+        to: {
+            transform: winner ? 'translateY(0)' : 'translateY(-100%)', // Stop at screen top if there's a winner
+            opacity: winner ? 1 : 0
+        },
+        config: { duration: 2000 } // Duration of the animation
     });
+
+    useEffect(() => {
+        if (winner) {
+            if (winner === 'Draw') {
+                setBackgroundColor('bg-gradient-to-r from-gray-700 to-yellow-700');
+            } else {
+                setBackgroundColor(winner === playerName ? 'bg-gradient-to-r from-gray-700 to-green-700' : 'bg-gradient-to-r from-gray-700 to-red-700');
+            }
+        }
+    }, [winner, playerName]);
+
+    const winnerConfetti = winner === playerName;
+    const drawConfetti = winner === 'Draw';
 
     if (winner) {
         return (
-            <div className="min-h-screen bg-gradient-to-r from-gray-700 to-indigo-700 flex flex-col items-center justify-center text-white font-sans relative">
+            <div className={`min-h-screen ${backgroundColor} flex flex-col items-center justify-center text-white font-sans relative`}>
                 <animated.div style={confettiStyles}>
                     <Confetti
                         width={window.innerWidth}
                         height={window.innerHeight}
-                        numberOfPieces={500}
+                        numberOfPieces={winnerConfetti ? 500 : drawConfetti ? 300 : 100}
                         recycle={false}
+                        colors={winnerConfetti ? ['#00FF00', '#FFFFFF'] : drawConfetti ? ['#FFFF00', '#FFA500'] : ['#FF0000', '#FFFFFF']}
                     />
                 </animated.div>
-                <h1 className="text-4xl font-bold mb-8">Game {gameId}</h1>
-                <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `${winner} wins!`}</h2>
+                <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
+                <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `You Lost, ${winner} is Ur Uncle!`}</h2>
                 <p className="text-2xl mb-4">Thanks for playing!</p>
                 <div className="flex space-x-16 w-full max-w-4xl">
                     <div className="w-full">
@@ -166,6 +185,7 @@ const Game: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans">
+            <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
             <h1 className="text-4xl font-bold mb-8">Game {gameId}</h1>
             <h2 className="text-2xl mb-4">{currentTurn === playerName ? "Your turn!" : "Opponent's turn"}</h2>
             <input 
