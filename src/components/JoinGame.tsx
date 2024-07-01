@@ -13,7 +13,7 @@ const JoinGame: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-gray-800 to-green-700 flex flex-col items-center justify-center text-white">
+        <div className="min-h-screen bg-gradient-to-r from-gray-700 to-green-700 flex flex-col items-center justify-center text-white">
             <h1 className="text-4xl font-bold mb-8">Join Game</h1>
             <div className="flex flex-col items-center space-y-4">
                 <input 

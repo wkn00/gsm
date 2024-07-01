@@ -38,7 +38,7 @@ const StartGame: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex flex-col items-center justify-center text-white">
+        <div className="min-h-screen bg-gradient-to-r from-gray-700 to-green-700 flex flex-col items-center justify-center text-white">
             <h1 className="text-4xl font-bold mb-8">Enter your 3-digit number</h1>
             <div className="flex flex-col items-center space-y-4 w-full max-w-md">
                 <input

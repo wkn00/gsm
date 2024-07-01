@@ -51,7 +51,7 @@ app.post('/start-game', (req, res) => {
         return res.status(400).json({ message: 'Invalid number. Ensure it is 3 digits, no zeros, and no duplicates.' });
     }
     games[gameId].players[playerName] = number;
-    
+
     // Check if both players have entered their numbers
     if (Object.values(games[gameId].players).every(playerNumber => playerNumber.length === 3)) {
         games[gameId].status = 'ready';
@@ -92,7 +92,13 @@ app.post('/guess', (req, res) => {
     game.guesses[playerName] += 1;
 
     if (result === 'XXX') {
-        game.winner = playerName;
+        if (game.guesses[opponentName] < game.guesses[playerName]) {
+            // If opponent has less turns, wait for their guess
+            game.currentTurn = opponentName;
+        } else {
+            // Both have equal turns or opponent has more turns, game over
+            game.winner = playerName;
+        }
     } else {
         game.currentTurn = opponentName;
     }
