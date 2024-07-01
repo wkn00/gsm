@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Confetti from 'react-confetti';
+import { useSpring, animated } from '@react-spring/web';
 
 const Game: React.FC = () => {
     const { gameId, playerName } = useParams<{ gameId: string, playerName: string }>();
@@ -104,11 +106,26 @@ const Game: React.FC = () => {
     const opponentTurn = turns.find(turn => turn.playerName !== playerName);
     const opponentName = opponentTurn ? opponentTurn.playerName : 'Opponent';
 
+    const confettiStyles = useSpring({
+        opacity: winner ? 1 : 0,
+        transform: winner ? 'translateY(0)' : 'translateY(-100%)',
+        config: { duration: 1000 }
+    });
+
     if (winner) {
         return (
-            <div className="min-h-screen bg-gradient-to-r from-gray-700 to-indigo-700 flex flex-col items-center justify-center text-white font-sans">
+            <div className="min-h-screen bg-gradient-to-r from-gray-700 to-indigo-700 flex flex-col items-center justify-center text-white font-sans relative">
+                <animated.div style={confettiStyles}>
+                    <Confetti
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        numberOfPieces={500}
+                        recycle={false}
+                    />
+                </animated.div>
                 <h1 className="text-4xl font-bold mb-8">Game {gameId}</h1>
-                <h2 className="text-2xl mb-4">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "You win!" : `${winner} wins!`}</h2>
+                <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `${winner} wins!`}</h2>
+                <p className="text-2xl mb-4">Thanks for playing!</p>
                 <div className="flex space-x-16 w-full max-w-4xl">
                     <div className="w-full">
                         <h3 className="text-xl mb-4 text-center">{playerName}</h3>
