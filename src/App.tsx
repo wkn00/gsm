@@ -9,7 +9,7 @@ import Game from './components/Game';
 
 const App: React.FC = () => {
     return (
-        <Router basename='/gsm'>
+        <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create" element={<CreateGame />} />
