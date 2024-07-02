@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -7,26 +7,20 @@ const StartGame: React.FC = () => {
     const navigate = useNavigate();
     const [number, setNumber] = useState('');
     const [error, setError] = useState('');
+    const [waiting, setWaiting] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
     const validateAndSetNumber = (input: string) => {
-        // Remove any character that is not 1-9
         const filteredInput = input.replace(/[^1-9]/g, '');
-
-        // Ensure no duplicates and proper length
         if (new Set(filteredInput).size !== filteredInput.length) {
             setError('No duplicate digits allowed.');
             return;
         } else {
             setError('');
         }
-
-        // Update the state only if input has 1-3 digits
         if (filteredInput.length <= 3) {
             setNumber(filteredInput);
-        } else {
-            setError('Enter exactly 3 digits.');
         }
     };
 
@@ -36,8 +30,22 @@ const StartGame: React.FC = () => {
             return;
         }
         await axios.post(`${apiUrl}/start-game`, { gameId, playerName, number });
-        navigate(`/game/${gameId}/${playerName}`);
+        setWaiting(true);
     };
+
+    useEffect(() => {
+        if (waiting) {
+            const interval = setInterval(async () => {
+                const response = await axios.get(`${apiUrl}/ready/${gameId}`);
+                if (response.data.allPlayersReady) {
+                    clearInterval(interval);
+                    navigate(`/game/${gameId}/${playerName}`);
+                }
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }
+    }, [waiting, gameId, navigate, playerName, apiUrl]);
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-700 to-green-700 flex flex-col items-center justify-center text-white">
@@ -49,6 +57,7 @@ const StartGame: React.FC = () => {
                     value={number}
                     onChange={(e) => validateAndSetNumber(e.target.value)}
                     maxLength={3}
+                    disabled={waiting}
                 />
                 {error && <div className="text-red-500">{error}</div>}
                 <div className="text-gray-200 text-sm">
@@ -60,9 +69,9 @@ const StartGame: React.FC = () => {
                         number.length === 3 && !error ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'
                     }`}
                     onClick={startGame}
-                    disabled={number.length !== 3 || error !== ''}
+                    disabled={number.length !== 3 || error !== '' || waiting}
                 >
-                    Start Game
+                    {waiting ? 'Waiting for other player...' : 'Start Game'}
                 </button>
             </div>
         </div>

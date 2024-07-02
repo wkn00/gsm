@@ -13,6 +13,8 @@ const Game: React.FC = () => {
     const [winner, setWinner] = useState<string | null>(null);
     const [error, setError] = useState('');
     const [backgroundColor, setBackgroundColor] = useState('bg-gradient-to-r from-gray-700 to-indigo-700');
+    const [restartVotes, setRestartVotes] = useState<{ [key: string]: boolean }>({});
+    const [scores, setScores] = useState<{ [key: string]: number }>({});
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -21,6 +23,8 @@ const Game: React.FC = () => {
         setTurns(response.data.turns);
         setCurrentTurn(response.data.currentTurn);
         setWinner(response.data.winner);
+        setRestartVotes(response.data.restartVotes);
+        setScores(response.data.scores);
     }, [gameId, apiUrl]);
 
     useEffect(() => {
@@ -29,19 +33,25 @@ const Game: React.FC = () => {
         return () => clearInterval(interval); // Clean up interval on component unmount
     }, [fetchGameState]);
 
-    const validateAndSetGuess = (input: string) => {
-        // Remove any character that is not 1-9
-        const filteredInput = input.replace(/[^1-9]/g, '');
+    useEffect(() => {
+        const checkRestart = setInterval(async () => {
+            const response = await axios.get(`${apiUrl}/is-restarted/${gameId}`);
+            if (response.data.isRestarted) {
+                clearInterval(checkRestart);
+                navigate(`/start/${gameId}/${playerName}`);
+            }
+        }, 1000);
+        return () => clearInterval(checkRestart);
+    }, [gameId, playerName, navigate, apiUrl]);
 
-        // Ensure no duplicates
+    const validateAndSetGuess = (input: string) => {
+        const filteredInput = input.replace(/[^1-9]/g, '');
         if (new Set(filteredInput).size !== filteredInput.length) {
             setError('No duplicate digits allowed.');
             return;
         } else {
             setError('');
         }
-
-        // Update the state only if input has 1-3 digits
         if (filteredInput.length <= 3) {
             setGuess(filteredInput);
         }
@@ -107,6 +117,13 @@ const Game: React.FC = () => {
         }
     }, [turns, checkForWinner]);
 
+    const restartGame = async () => {
+        const response = await axios.post(`${apiUrl}/restart`, { gameId, playerName });
+        if (response.data.restart) {
+            navigate(`/start/${gameId}/${playerName}`);
+        }
+    };
+
     const opponentTurn = turns.find(turn => turn.playerName !== playerName);
     const opponentName = opponentTurn ? opponentTurn.playerName : 'Opponent';
 
@@ -116,7 +133,7 @@ const Game: React.FC = () => {
             transform: winner ? 'translateY(0)' : 'translateY(-100%)', // Stop at screen top if there's a winner
             opacity: winner ? 1 : 0
         },
-        config: { duration: 2000 } // Duration of the animation
+        config: { duration: 5000 } // Duration of the animation
     });
 
     useEffect(() => {
@@ -145,7 +162,7 @@ const Game: React.FC = () => {
                     />
                 </animated.div>
                 <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
-                <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `You Lost, ${winner} is Ur Uncle!`}</h2>
+                <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `You Lost, ${winner} is the winner!`}</h2>
                 <p className="text-2xl mb-4">Thanks for playing!</p>
                 <div className="flex space-x-16 w-full max-w-4xl">
                     <div className="w-full">
@@ -179,13 +196,30 @@ const Game: React.FC = () => {
                         </table>
                     </div>
                 </div>
+                <button
+                    className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                    onClick={restartGame}
+                >
+                    Restart Game
+                </button>
+                <p className="mt-4 text-lg">{Object.keys(restartVotes).length} / 2 players voted to restart</p>
+                <div className="absolute top-0 right-0 p-4 text-lg font-bold">
+                    {Object.keys(scores).map(player => (
+                        <div key={player}>{player}: {scores[player]}</div>
+                    ))}
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans">
+        <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans relative">
             <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
+            <div className="absolute top-0 right-0 p-4 text-lg font-bold">
+                {Object.keys(scores).map(player => (
+                    <div key={player}>{player}: {scores[player]}</div>
+                ))}
+            </div>
             <h1 className="text-4xl font-bold mb-8">Game {gameId}</h1>
             <h2 className="text-2xl mb-4">{currentTurn === playerName ? "Your turn!" : "Opponent's turn"}</h2>
             <input 
