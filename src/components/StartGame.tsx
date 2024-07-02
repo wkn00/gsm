@@ -52,8 +52,8 @@ const StartGame: React.FC = () => {
             <h1 className="text-4xl font-bold mb-8">Enter your 3-digit number</h1>
             <div className="flex flex-col items-center space-y-4 w-full max-w-md">
                 <input
-                    className="p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md"
-                    placeholder="123"
+                    className="text-center p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md"
+                    placeholder="اويلي"
                     value={number}
                     onChange={(e) => validateAndSetNumber(e.target.value)}
                     maxLength={3}

@@ -15,6 +15,9 @@ const Game: React.FC = () => {
     const [backgroundColor, setBackgroundColor] = useState('bg-gradient-to-r from-gray-700 to-indigo-700');
     const [restartVotes, setRestartVotes] = useState<{ [key: string]: boolean }>({});
     const [scores, setScores] = useState<{ [key: string]: number }>({});
+    const [restartButtonDisabled, setRestartButtonDisabled] = useState(false);
+    const [waitingForRestart, setWaitingForRestart] = useState(false);
+    const [playersNumbers, setPlayersNumbers] = useState<{ [key: string]: string }>({});
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -25,6 +28,7 @@ const Game: React.FC = () => {
         setWinner(response.data.winner);
         setRestartVotes(response.data.restartVotes);
         setScores(response.data.scores);
+        setPlayersNumbers(response.data.players);
     }, [gameId, apiUrl]);
 
     useEffect(() => {
@@ -38,6 +42,7 @@ const Game: React.FC = () => {
             const response = await axios.get(`${apiUrl}/is-restarted/${gameId}`);
             if (response.data.isRestarted) {
                 clearInterval(checkRestart);
+                setWaitingForRestart(false);
                 navigate(`/start/${gameId}/${playerName}`);
             }
         }, 1000);
@@ -118,9 +123,13 @@ const Game: React.FC = () => {
     }, [turns, checkForWinner]);
 
     const restartGame = async () => {
+        setRestartButtonDisabled(true);
+        setWaitingForRestart(true);
         const response = await axios.post(`${apiUrl}/restart`, { gameId, playerName });
         if (response.data.restart) {
             navigate(`/start/${gameId}/${playerName}`);
+        } else {
+            setRestartButtonDisabled(false);
         }
     };
 
@@ -166,7 +175,7 @@ const Game: React.FC = () => {
                 <p className="text-2xl mb-4">Thanks for playing!</p>
                 <div className="flex space-x-16 w-full max-w-4xl">
                     <div className="w-full">
-                        <h3 className="text-xl mb-4 text-center">{playerName}</h3>
+                        <h3 className="text-xl mb-4 text-center">{playerName} ({playersNumbers[playerName!] ?? 'N/A'})</h3>
                         <table className="w-full table-auto bg-white bg-opacity-10 rounded-lg shadow-lg">
                             <thead>
                                 <tr>
@@ -181,7 +190,7 @@ const Game: React.FC = () => {
                         </table>
                     </div>
                     <div className="w-full">
-                        <h3 className="text-xl mb-4 text-center">{opponentName}</h3>
+                        <h3 className="text-xl mb-4 text-center">{opponentName} ({playersNumbers[opponentName!] ?? 'N/A'})</h3>
                         <table className="w-full table-auto bg-white bg-opacity-10 rounded-lg shadow-lg">
                             <thead>
                                 <tr>
@@ -191,16 +200,17 @@ const Game: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {playerGuesses(opponentName)}
+                                {playerGuesses(opponentName || '')}
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <button
-                    className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                    className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={restartGame}
+                    disabled={restartButtonDisabled}
                 >
-                    Restart Game
+                    {waitingForRestart ? 'Waiting for other player...' : 'Restart Game'}
                 </button>
                 <p className="mt-4 text-lg">{Object.keys(restartVotes).length} / 2 players voted to restart</p>
                 <div className="absolute top-0 right-0 p-4 text-lg font-bold">
@@ -215,16 +225,11 @@ const Game: React.FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans relative">
             <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
-            <div className="absolute top-0 right-0 p-4 text-lg font-bold">
-                {Object.keys(scores).map(player => (
-                    <div key={player}>{player}: {scores[player]}</div>
-                ))}
-            </div>
             <h1 className="text-4xl font-bold mb-8">Game {gameId}</h1>
             <h2 className="text-2xl mb-4">{currentTurn === playerName ? "Your turn!" : "Opponent's turn"}</h2>
             <input 
-                className="p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md mb-4"
-                placeholder="123"
+                className="text-center p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md mb-4"
+                placeholder="مشبك"
                 value={guess}
                 onChange={(e) => validateAndSetGuess(e.target.value)}
                 disabled={currentTurn !== playerName}
