@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/gsm/static/css/main.073dd4a7.css",
-    "main.js": "/gsm/static/js/main.cd7ecd25.js",
+    "main.css": "/gsm/static/css/main.c5d082df.css",
+    "main.js": "/gsm/static/js/main.e4b706f1.js",
     "index.html": "/gsm/index.html",
-    "main.073dd4a7.css.map": "/gsm/static/css/main.073dd4a7.css.map",
-    "main.cd7ecd25.js.map": "/gsm/static/js/main.cd7ecd25.js.map"
+    "main.c5d082df.css.map": "/gsm/static/css/main.c5d082df.css.map",
+    "main.e4b706f1.js.map": "/gsm/static/js/main.e4b706f1.js.map"
   },
   "entrypoints": [
-    "static/css/main.073dd4a7.css",
-    "static/js/main.cd7ecd25.js"
+    "static/css/main.c5d082df.css",
+    "static/js/main.e4b706f1.js"
   ]
 }
