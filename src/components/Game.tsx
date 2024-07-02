@@ -14,7 +14,6 @@ const Game: React.FC = () => {
     const [error, setError] = useState('');
     const [backgroundColor, setBackgroundColor] = useState('bg-gradient-to-r from-gray-700 to-indigo-700');
     const [restartVotes, setRestartVotes] = useState<{ [key: string]: boolean }>({});
-    const [scores, setScores] = useState<{ [key: string]: number }>({});
     const [restartButtonDisabled, setRestartButtonDisabled] = useState(false);
     const [waitingForRestart, setWaitingForRestart] = useState(false);
     const [playersNumbers, setPlayersNumbers] = useState<{ [key: string]: string }>({});
@@ -27,7 +26,6 @@ const Game: React.FC = () => {
         setCurrentTurn(response.data.currentTurn);
         setWinner(response.data.winner);
         setRestartVotes(response.data.restartVotes);
-        setScores(response.data.scores);
         setPlayersNumbers(response.data.players);
     }, [gameId, apiUrl]);
 
@@ -160,7 +158,7 @@ const Game: React.FC = () => {
 
     if (winner) {
         return (
-            <div className={`min-h-screen ${backgroundColor} flex flex-col items-center justify-center text-white font-sans relative`}>
+            <div className={`min-h-screen ${backgroundColor} flex flex-col items-center justify-center text-white font-sans relative overflow-hidden`}>
                 <animated.div style={confettiStyles}>
                     <Confetti
                         width={window.innerWidth}
@@ -213,19 +211,14 @@ const Game: React.FC = () => {
                     {waitingForRestart ? 'Waiting for other player...' : 'Restart Game'}
                 </button>
                 <p className="mt-4 text-lg">{Object.keys(restartVotes).length} / 2 players voted to restart</p>
-                <div className="absolute top-0 right-0 p-4 text-lg font-bold">
-                    {Object.keys(scores).map(player => (
-                        <div key={player}>{player}: {scores[player]}</div>
-                    ))}
-                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans relative">
+        <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans relative overflow-hidden">
             <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
-            <h1 className="text-4xl font-bold mb-8">Game {gameId}</h1>
+            <h1 className="text-4xl font-bold mb-8">Guess My Number Game Code {gameId}</h1>
             <h2 className="text-2xl mb-4">{currentTurn === playerName ? "Your turn!" : "Opponent's turn"}</h2>
             <input 
                 className="text-center p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md mb-4"
