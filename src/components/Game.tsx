@@ -17,6 +17,8 @@ const Game: React.FC = () => {
     const [restartButtonDisabled, setRestartButtonDisabled] = useState(false);
     const [waitingForRestart, setWaitingForRestart] = useState(false);
     const [playersNumbers, setPlayersNumbers] = useState<{ [key: string]: string }>({});
+    const [scores, setScores] = useState<{ [key: string]: number }>({ playerName: 0, opponent: 0 });
+
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -218,11 +220,25 @@ const Game: React.FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans relative overflow-hidden">
             <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
-            <h1 className="text-4xl font-bold mb-8">Guess My Number Game Code {gameId}</h1>
-            <h2 className="text-2xl mb-4">{currentTurn === playerName ? "Your turn!" : "Opponent's turn"}</h2>
+            <h2 className="text-4xl font-bold mb-8">Guess My Number</h2>
+            <h2 className={`text-3xl mb-5 transition-transform duration-500 ${currentTurn === playerName ? 'text-green-400 animate-pulse' : 'text-red-400'}`}>
+                {currentTurn === playerName ? (
+                    <>
+                        Your turn<span className="relative inline-block ml-1">
+                            !<span className="absolute top-6 right-0 inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                        </span>
+                    </>
+                ) : (
+                    <>
+                        Opponent's turn<span className="relative inline-block ml-1">
+                            !<span className="absolute top-6 right-0 inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75 animate-ping"></span>
+                        </span>
+                    </>
+                )}
+            </h2>
             <input 
                 className="text-center p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md mb-4"
-                placeholder="مشبك"
+                placeholder=""
                 value={guess}
                 onChange={(e) => validateAndSetGuess(e.target.value)}
                 disabled={currentTurn !== playerName}

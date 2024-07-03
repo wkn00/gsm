@@ -6,6 +6,8 @@ const JoinGame: React.FC = () => {
     const navigate = useNavigate();
     const [gameId, setGameId] = useState('');
     const [playerName, setPlayerName] = useState('');
+    const [isGameIdValid, setIsGameIdValid] = useState(false);
+    const [isPlayerNameValid, setIsPlayerNameValid] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -14,25 +16,47 @@ const JoinGame: React.FC = () => {
         navigate(`/waiting/${gameId}/${playerName}`);
     };
 
+    const handleGameIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (/^[a-zA-Z0-9]{0,5}$/.test(value)) {
+            setGameId(value);
+            setIsGameIdValid(value.length === 5);
+        }
+    };
+
+    const handlePlayerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setPlayerName(value);
+        setIsPlayerNameValid(value.trim().length > 0);
+    };
+
+    const isFormValid = isGameIdValid && isPlayerNameValid;
+
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-700 to-green-700 flex flex-col items-center justify-center text-white">
-            <h1 className="text-4xl font-bold mb-8">Join Game</h1>
-            <div className="flex flex-col items-center space-y-4">
-                <input 
-                    className="p-2 text-black rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
-                    placeholder="Game ID"
-                    value={gameId}
-                    onChange={(e) => setGameId(e.target.value)} 
-                />
-                <input 
-                    className="p-2 text-black rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+            <h1 className="text-4xl font-bold mb-8 animate-pulse">Join Game</h1>
+            <div className="flex flex-col items-center space-y-6">
+                <div className="relative">
+                    <input
+                        className={`p-3 text-center text-lg rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-4 transition duration-300 ease-in-out ${isGameIdValid ? 'focus:ring-green-500' : 'focus:ring-red-500'}`}
+                        placeholder="Game ID"
+                        value={gameId}
+                        onChange={handleGameIdChange}
+                        maxLength={5}
+                    />
+                </div>
+                <input
+                    className="p-3 text-center text-lg rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-4 focus:ring-green-500 transition duration-300 ease-in-out"
                     placeholder="Your Name"
                     value={playerName}
-                    onChange={(e) => setPlayerName(e.target.value)} 
+                    onChange={handlePlayerNameChange}
                 />
-                <button 
-                    className="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
+                <button
+                    className={`px-6 py-3 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 ${
+                        isFormValid ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 cursor-not-allowed'
+                    }`}
                     onClick={joinGame}
+                    disabled={!isFormValid}
                 >
                     Join Game
                 </button>

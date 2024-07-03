@@ -6,6 +6,8 @@ import JoinGame from './components/JoinGame';
 import WaitingRoom from './components/WaitingRoom';
 import StartGame from './components/StartGame';
 import Game from './components/Game';
+import HowToPlay from './components/HowToPlay';
+import NotFound from './components/NotFound';
 
 const App: React.FC = () => {
     return (
@@ -17,6 +19,8 @@ const App: React.FC = () => {
                 <Route path="/waiting/:gameId/:playerName" element={<WaitingRoom />} />
                 <Route path="/start/:gameId/:playerName" element={<StartGame />} />
                 <Route path="/game/:gameId/:playerName" element={<Game />} />
+                <Route path="/how-to-play" element={<HowToPlay />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>
     );

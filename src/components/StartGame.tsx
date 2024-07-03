@@ -53,7 +53,7 @@ const StartGame: React.FC = () => {
             <div className="flex flex-col items-center space-y-4 w-full max-w-md">
                 <input
                     className="text-center p-3 w-24 text-lg text-gray-900 bg-white bg-opacity-70 rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-md"
-                    placeholder="اويلي"
+                    placeholder=""
                     value={number}
                     onChange={(e) => validateAndSetNumber(e.target.value)}
                     maxLength={3}
