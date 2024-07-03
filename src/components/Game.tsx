@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import Confetti from 'react-confetti';
-import { useSpring, animated } from '@react-spring/web';
 
 const Game: React.FC = () => {
     const { gameId, playerName } = useParams<{ gameId: string, playerName: string }>();
@@ -17,8 +15,6 @@ const Game: React.FC = () => {
     const [restartButtonDisabled, setRestartButtonDisabled] = useState(false);
     const [waitingForRestart, setWaitingForRestart] = useState(false);
     const [playersNumbers, setPlayersNumbers] = useState<{ [key: string]: string }>({});
-    const [scores, setScores] = useState<{ [key: string]: number }>({ playerName: 0, opponent: 0 });
-
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -136,15 +132,6 @@ const Game: React.FC = () => {
     const opponentTurn = turns.find(turn => turn.playerName !== playerName);
     const opponentName = opponentTurn ? opponentTurn.playerName : 'Opponent';
 
-    const confettiStyles = useSpring({
-        from: { transform: 'translateY(-100%)' }, // Start above the screen
-        to: {
-            transform: winner ? 'translateY(0)' : 'translateY(-100%)', // Stop at screen top if there's a winner
-            opacity: winner ? 1 : 0
-        },
-        config: { duration: 5000 } // Duration of the animation
-    });
-
     useEffect(() => {
         if (winner) {
             if (winner === 'Draw') {
@@ -155,21 +142,9 @@ const Game: React.FC = () => {
         }
     }, [winner, playerName]);
 
-    const winnerConfetti = winner === playerName;
-    const drawConfetti = winner === 'Draw';
-
     if (winner) {
         return (
             <div className={`min-h-screen ${backgroundColor} flex flex-col items-center justify-center text-white font-sans relative overflow-hidden`}>
-                <animated.div style={confettiStyles}>
-                    <Confetti
-                        width={window.innerWidth}
-                        height={window.innerHeight}
-                        numberOfPieces={winnerConfetti ? 500 : drawConfetti ? 300 : 100}
-                        recycle={false}
-                        colors={winnerConfetti ? ['#00FF00', '#FFFFFF'] : drawConfetti ? ['#FFFF00', '#FFA500'] : ['#FF0000', '#FFFFFF']}
-                    />
-                </animated.div>
                 <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
                 <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `You Lost, ${winner} is the winner!`}</h2>
                 <p className="text-2xl mb-4">Thanks for playing!</p>
@@ -231,7 +206,6 @@ const Game: React.FC = () => {
                 ) : (
                     <>
                         Opponent's turn<span className="relative inline-block ml-1">
-                            !<span className="absolute top-6 right-0 inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75 animate-ping"></span>
                         </span>
                     </>
                 )}
