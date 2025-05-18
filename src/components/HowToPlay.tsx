@@ -33,10 +33,6 @@ const HowToPlay: React.FC = () => {
                                 <li className="text-gray-400"><strong>5</strong> is not in the number.<strong></strong></li>
                             </ul>
                         </div>
-                        <div className="bg-white bg-opacity-10 p-9 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105">
-                            <h3 className="text-xl font-semibold mb-2">Example Feedback</h3>
-                            <img src="/example.png" alt="Example Feedback" className="w-full h-auto rounded-lg" />
-                        </div>
                     </div>
                 </div>
                 <Link to="/" className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">

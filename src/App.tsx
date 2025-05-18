@@ -13,7 +13,7 @@ const App: React.FC = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/gsm" element={<Home />} />
                 <Route path="/create" element={<CreateGame />} />
                 <Route path="/join" element={<JoinGame />} />
                 <Route path="/waiting/:gameId/:playerName" element={<WaitingRoom />} />
