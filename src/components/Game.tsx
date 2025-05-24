@@ -145,7 +145,7 @@ const Game: React.FC = () => {
     if (winner) {
         return (
             <div className={`min-h-screen ${backgroundColor} flex flex-col items-center justify-center text-white font-sans relative overflow-hidden`}>
-                <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
+                <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/gsm')}>Guess My Number</div>
                 <h2 className="text-4xl font-bold mb-4 animate-bounce">{winner === 'Draw' ? "It's a draw!" : winner === playerName ? "Congratulations, You win!" : `You Lost, ${winner} is the winner!`}</h2>
                 <p className="text-2xl mb-4">Thanks for playing!</p>
                 <div className="flex space-x-16 w-full max-w-4xl">

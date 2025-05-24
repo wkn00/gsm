@@ -35,7 +35,7 @@ const HowToPlay: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <Link to="/" className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">
+                <Link to="/gsm" className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 inline-block">
                     Back to Home
                 </Link>
             </div>
