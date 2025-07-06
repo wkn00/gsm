@@ -39,7 +39,7 @@ const Game: React.FC = () => {
             if (response.data.isRestarted) {
                 clearInterval(checkRestart);
                 setWaitingForRestart(false);
-                navigate(`/start/${gameId}/${playerName}`);
+                navigate(`/gsm/start/${gameId}/${playerName}`);
             }
         }, 1000);
         return () => clearInterval(checkRestart);
@@ -123,7 +123,7 @@ const Game: React.FC = () => {
         setWaitingForRestart(true);
         const response = await axios.post(`${apiUrl}/restart`, { gameId, playerName });
         if (response.data.restart) {
-            navigate(`/start/${gameId}/${playerName}`);
+            navigate(`/gsm/start/${gameId}/${playerName}`);
         } else {
             setRestartButtonDisabled(false);
         }
@@ -194,7 +194,7 @@ const Game: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-gray-800 to-blue-700 flex flex-col items-center justify-center text-white font-sans relative overflow-hidden">
-            <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>Guess My Number</div>
+            <div className="absolute top-0 left-0 p-4 text-2xl font-bold cursor-pointer" onClick={() => navigate('/gsm')}>Guess My Number</div>
             <h2 className="text-4xl font-bold mb-8">Guess My Number</h2>
             <h2 className={`text-3xl mb-5 transition-transform duration-500 ${currentTurn === playerName ? 'text-green-400 animate-pulse' : 'text-red-400'}`}>
                 {currentTurn === playerName ? (

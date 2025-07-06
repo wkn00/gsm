@@ -11,7 +11,7 @@ const CreateGame: React.FC = () => {
 
     const createGame = async () => {
         const response = await axios.post(`${apiUrl}/start`, { playerName });
-        navigate(`/waiting/${response.data.gameId}/${response.data.playerName}`);
+        navigate(`/gsm/waiting/${response.data.gameId}/${response.data.playerName}`);
     };
 
     const handlePlayerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

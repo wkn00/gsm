@@ -16,7 +16,7 @@ const WaitingRoom: React.FC = () => {
             setPlayers(response.data.players);
             if (Object.keys(response.data.players).length === 2) {
                 clearInterval(interval);
-                navigate(`/start/${gameId}/${playerName}`);
+                navigate(`/gsm/start/${gameId}/${playerName}`);
             }
         }, 1000);
 

@@ -39,7 +39,7 @@ const StartGame: React.FC = () => {
                 const response = await axios.get(`${apiUrl}/ready/${gameId}`);
                 if (response.data.allPlayersReady) {
                     clearInterval(interval);
-                    navigate(`/game/${gameId}/${playerName}`);
+                    navigate(`/gsm/game/${gameId}/${playerName}`);
                 }
             }, 1000);
 

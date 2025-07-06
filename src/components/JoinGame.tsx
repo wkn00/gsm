@@ -13,7 +13,7 @@ const JoinGame: React.FC = () => {
 
     const joinGame = async () => {
         await axios.post(`${apiUrl}/join`, { gameId, playerName });
-        navigate(`/waiting/${gameId}/${playerName}`);
+        navigate(`/gsm/waiting/${gameId}/${playerName}`);
     };
 
     const handleGameIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -14,12 +14,12 @@ const App: React.FC = () => {
         <Router>
             <Routes>
                 <Route path="/gsm" element={<Home />} />
-                <Route path="/create" element={<CreateGame />} />
-                <Route path="/join" element={<JoinGame />} />
-                <Route path="/waiting/:gameId/:playerName" element={<WaitingRoom />} />
-                <Route path="/start/:gameId/:playerName" element={<StartGame />} />
-                <Route path="/game/:gameId/:playerName" element={<Game />} />
-                <Route path="/how-to-play" element={<HowToPlay />} />
+                <Route path="/gsm/create" element={<CreateGame />} />
+                <Route path="/gsm/join" element={<JoinGame />} />
+                <Route path="/gsm/waiting/:gameId/:playerName" element={<WaitingRoom />} />
+                <Route path="/gsm/start/:gameId/:playerName" element={<StartGame />} />
+                <Route path="/gsm/game/:gameId/:playerName" element={<Game />} />
+                <Route path="/gsm/how-to-play" element={<HowToPlay />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>
