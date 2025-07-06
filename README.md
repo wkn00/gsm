@@ -20,8 +20,6 @@ This project demonstrates fundamental programming concepts such as:
 - Score tracking (optional)
 - Clean and minimal design
 
-## 💻 Installation
+## 💻 Live Demo
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/guess-my-number.git
+You can access the game at https://wkn00.github.io/gsm/  (no domain yet :))
