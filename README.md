@@ -1,3 +1,27 @@
-Welcome to Guess My Number Game!
+# 🎲 Guess My Number Game
 
-A game i used to play it on papers when i was a child and i wanted to try a digital version of it and developing my skills at the same time.
+A simple, nostalgic number guessing game inspired by the paper version I used to play as a child. This project allowed me to explore building a digital version while sharpening my development skills.
+
+## 📝 Description
+
+**Guess My Number** challenges the player to guess a randomly generated secret number within a specified range. After each guess, the game provides feedback indicating whether the guess is too high, too low, or correct.
+
+This project demonstrates fundamental programming concepts such as:
+- Random number generation
+- User input validation
+- Game state management
+- Event handling
+
+## 🚀 Features
+
+- Configurable number range
+- Interactive user interface
+- Immediate feedback on guesses
+- Score tracking (optional)
+- Clean and minimal design
+
+## 💻 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/guess-my-number.git
